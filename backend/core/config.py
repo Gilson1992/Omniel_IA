@@ -1,17 +1,32 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    secret_key: str = "dev-secret-key-change-me"
-    admin_user: str = "admin"
-    admin_pass: str = "jarvis123"
-    openai_api_key: str = ""
-    algorithm: str = "HS256"
-    access_token_expire_minutes: int = 60 * 24  # 24 hours
+    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
 
-    class Config:
-        env_file = ".env"
+    jwt_secret: str = 'dev-secret-key-change-me'
+    jwt_alg: str = 'HS256'
+    jwt_exp_minutes: int = 60
+
+    admin_user: str = 'admin'
+    admin_pass: str = 'jarvis123'
+
+    backend_host: str = '0.0.0.0'
+    backend_port: int = 8000
+    frontend_origin: str = 'http://localhost:5173'
+
+    database_url: str = 'postgresql+psycopg://postgres:postgres@localhost:5432/omniel'
+    redis_url: str = 'redis://localhost:6379/0'
+
+    weather_api_key: str = ''
+    weather_base_url: str = 'https://api.openweathermap.org/data/2.5/weather'
+
+    openai_api_key: str = ''
+    openai_chat_model: str = 'gpt-4o-mini'
+    openai_embedding_model: str = 'text-embedding-3-small'
+
+    ingest_async: bool = False
 
 
 @lru_cache()

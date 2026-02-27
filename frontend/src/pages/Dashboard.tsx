@@ -41,7 +41,7 @@ export default function Dashboard() {
     let retryTimeout: ReturnType<typeof setTimeout>
 
     function connect() {
-      ws = new WebSocket(`${WS_URL}/assistant/events`)
+      ws = new WebSocket(`${WS_URL}/assistant/events?token=${encodeURIComponent(token as string)}`)
 
       ws.onopen = () => {
         setWsConnected(true)

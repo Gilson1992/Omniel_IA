@@ -1,5 +1,6 @@
-from pydantic import BaseModel
-from typing import List, Optional, Any
+from typing import Any, List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class LoginRequest(BaseModel):
@@ -9,7 +10,7 @@ class LoginRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str = 'bearer'
 
 
 class ChatRequest(BaseModel):
@@ -24,8 +25,9 @@ class Action(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
-    actions: List[Action] = []
+    actions: List[Action] = Field(default_factory=list)
     session_id: str
+    source: str = 'llm'
 
 
 class WeatherResponse(BaseModel):
@@ -42,5 +44,32 @@ class SystemResponse(BaseModel):
     ram_percent: float
     ram_used_gb: float
     ram_total_gb: float
+    disk_percent: float
+    disk_used_gb: float
+    disk_total_gb: float
     uptime_seconds: int
     status: str
+
+
+class Citation(BaseModel):
+    document_id: int
+    chunk_id: int
+    chunk_index: int
+    snippet: str
+
+
+class KnowledgeQueryRequest(BaseModel):
+    question: str
+    top_k: int = 5
+
+
+class KnowledgeQueryResponse(BaseModel):
+    answer: str
+    citations: List[Citation]
+
+
+class IngestResponse(BaseModel):
+    document_id: int
+    status: str
+    chunks: int = 0
+    job_id: Optional[str] = None
